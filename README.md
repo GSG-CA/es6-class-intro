@@ -75,13 +75,29 @@ spot.getName(); // Spot
 
 ES Modules are similar to Node's `require` syntax, but are a standardised part of the JS language. They let you split your code up and share it across multiple smaller files, as well as easily import external dependencies.
 
-Node 10 has [experimental support](https://nodejs.org/dist/latest-v10.x/docs/api/esm.html) for ES Modules (but you have to pass the `--experimental-modules` flag and use the `.mjs` file extension). The [newest browsers](https://caniuse.com/#search=modules) now have initial support, but generally we need to use a tool called a bundler to parse all our imports and "bundle" them into a single file that all browsers will understand.
+[Modern browsers](https://caniuse.com/#search=modules) support modules loaded from a script tag with `type="module"`. This tells the browser that this JS code may load additional code from other files.
 
-We'll cover this in more detail later—for now this project is set up so the imports should work fine.
+```html
+<script type="module">
+  import { add } from "./maths.js";
+
+  add(1, 2);
+</script>
+```
+
+Generally (for wider browser support) apps use a tool called a "bundler" to parse all the imports and "bundle" them into a single file that older browsers will understand. For ease of learning we won't be using a bundler yet.
+
+### Module scope
+
+Modules help with JavaScript's global variable problem: usually variables defined in one file are able to be accessed (and changed) in any other. This can be confusing and dangerous, since you can't tell where things are defined/changed.
+
+With modules variables defined in separate files are **not** accessible in another. This means you can have 100 variables named `x`, as long as they're all in different files.
+
+The only way to use a value from another module is to explicitly export it from one file, then import it where you want to use it.
 
 ### Exports
 
-Files can have two types of exports: default and named. Generally you use default exports if there's only one thing in a file that needs to be accessible outside of it. You'd use named exports to export multiple things (e.g. from a collection of utility functions). This is similar to how you might do `module.exports = a` for a single Node export, or `module.exports = { a, b }` to export an object with multiple properties.
+Files can have two types of exports: default and named. Generally you use default exports if there's only one thing in a file that needs to be accessible outside of it. You'd use named exports to export multiple things (e.g. from a collection of utility functions). This is conceptually similar to the difference between `module.exports = myFunction` and `module.exports = { myFunction, otherFunction }` in Node.
 
 This is how you default export something:
 
